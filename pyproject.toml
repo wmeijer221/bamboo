@@ -19,7 +19,7 @@ exclude = '''
 skip = 'scripts'
 
 [project]
-name = "bamboo"
+name = "bamboo-pandas"
 version = "0.0.1"
 description = "`bamboo` is Python package that attempts to add more structure and validation to pandas data transformations."
 readme = "README.md"
@@ -39,6 +39,11 @@ Repository = "https://github.com/wmeijer221/bamboo"
 
 [project.scripts]
 dille = "dille.cli:app"
+
+[tool.poetry]
+packages = [
+    { include = "bamboo" },
+]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^6.2.5"
