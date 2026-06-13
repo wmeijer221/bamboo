@@ -39,7 +39,7 @@ def _validate_input_output_series(
 
     # Parse output
     if not isinstance(transformation_output, OutputType):
-        raise BambooException(f"Excpected transformation of type {OutputType}, " f"but received {type(transformation_output)}")
+        raise BambooException(f"Expected transformation of type {OutputType}, " f"but received {type(transformation_output)}")
     data: dict[str, Any] = vars(transformation_output)
     abandoned = _get_abandoned_columns(OutputType)
     data = {col: value for col, value in data.items() if col not in abandoned}

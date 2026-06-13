@@ -65,8 +65,8 @@ def bamboo_transform(
         "`InputType` and `OutputType` must be specified",
         "when `func` is not specified. If you do not",
         "want to manually specify input and output",
-        "types, you should use `@pd_transform` instead",
-        "of `@pd_transform()`.",
+        "types, you should use `@bamboo_transform` instead",
+        "of `@bamboo_transform()`.",
     )
 
 
