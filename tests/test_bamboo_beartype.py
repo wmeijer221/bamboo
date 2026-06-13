@@ -9,6 +9,8 @@ from bamboo._exception import BambooException
 
 
 def test_bamboo_transform_with_beartype_output_violation_raises_bamboo_exception():
+    """Ensure a beartype-annotated BambooObject output with an invalid value raises BambooException."""
+
     @dataclass(kw_only=True)
     class Person(BambooObject):
         id: int
@@ -32,6 +34,8 @@ def test_bamboo_transform_with_beartype_output_violation_raises_bamboo_exception
 
 
 def test_bamboo_transform_with_beartype_output_ok():
+    """Verify a valid beartype-annotated BambooObject output passes and returns the expected series."""
+
     @dataclass(kw_only=True)
     class Person(BambooObject):
         id: int

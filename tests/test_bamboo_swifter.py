@@ -10,6 +10,8 @@ from bamboo._exception import BambooException
 
 
 def test_bamboo_transform_swifter_force_parallel_threads_happy_path():
+    """Verify that swifter can run a bamboo_transform in thread-parallel mode and produce correct output rows."""
+
     @dataclass(kw_only=True)
     class Person(BambooObject):
         id: int
@@ -35,6 +37,8 @@ def test_bamboo_transform_swifter_force_parallel_threads_happy_path():
 
 
 def test_bamboo_transform_swifter_force_parallel_threads_dataset_integrity_is_preserved():
+    """Confirm that swifter preserves row/column integrity and the full result matches the expected BambooOutput template."""
+
     @dataclass(kw_only=True)
     class Person(BambooObject):
         id: int
@@ -63,6 +67,8 @@ def test_bamboo_transform_swifter_force_parallel_threads_dataset_integrity_is_pr
 
 
 def test_bamboo_transform_swifter_force_parallel_threads_invalid_output_raises_bamboo_exception():
+    """Ensure invalid output from a swifter parallel bamboo_transform is wrapped as a BambooException."""
+
     @dataclass(kw_only=True)
     class Person(BambooObject):
         id: int

@@ -6,6 +6,8 @@ from bamboo import BambooObject
 
 
 def test_bamboo_object_returns_attribute_values_before_represented_row_is_set():
+    """Confirm BambooObject returns stored attribute values before a represented row is bound."""
+
     @dataclass(kw_only=True)
     class Person(BambooObject):
         id: int
@@ -18,6 +20,8 @@ def test_bamboo_object_returns_attribute_values_before_represented_row_is_set():
 
 
 def test_bamboo_object_returns_represented_row_values_after_represented_row_is_set():
+    """Confirm BambooObject returns row values once _set_represented_row is called."""
+
     @dataclass(kw_only=True)
     class Person(BambooObject):
         id: int
@@ -34,6 +38,8 @@ def test_bamboo_object_returns_represented_row_values_after_represented_row_is_s
 
 
 def test_bamboo_object_switches_values_before_and_after_setting_represented_row():
+    """Verify the same BambooObject instance reflects original values before and row values after binding."""
+
     @dataclass(kw_only=True)
     class Person(BambooObject):
         id: int
@@ -54,6 +60,8 @@ def test_bamboo_object_switches_values_before_and_after_setting_represented_row(
 
 
 def test_bamboo_object_resets_represented_row_to_none():
+    """Verify resetting the represented row to None restores original attribute access."""
+
     @dataclass(kw_only=True)
     class Person(BambooObject):
         id: int

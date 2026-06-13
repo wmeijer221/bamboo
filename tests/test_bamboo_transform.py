@@ -8,6 +8,8 @@ from bamboo._exception import BambooException
 
 
 def test_bamboo_transform_infers_input_and_output_types():
+    """Verify decorator inference of input and output Bamboo types when explicit types are omitted."""
+
     @dataclass(kw_only=True)
     class Person(BambooObject):
         id: int
@@ -31,6 +33,8 @@ def test_bamboo_transform_infers_input_and_output_types():
 
 
 def test_bamboo_transform_with_explicit_input_and_output_types():
+    """Verify bamboo_transform behavior when InputType and OutputType are explicitly provided."""
+
     @dataclass(kw_only=True)
     class Person(BambooObject):
         id: int
@@ -54,6 +58,8 @@ def test_bamboo_transform_with_explicit_input_and_output_types():
 
 
 def test_bamboo_transform_input_type_underspecified_for_row_data_raises_bamboo_exception():
+    """Validate that underspecified input row schema raises BambooException during transformation."""
+
     @dataclass(kw_only=True)
     class InputModel(BambooObject):
         id: int
@@ -73,6 +79,8 @@ def test_bamboo_transform_input_type_underspecified_for_row_data_raises_bamboo_e
 
 
 def test_bamboo_transform_input_type_overspecified_for_row_data_raises_bamboo_exception():
+    """Validate that overspecified input schema with missing row columns raises BambooException."""
+
     @dataclass(kw_only=True)
     class InputModel(BambooObject):
         id: int
@@ -94,6 +102,8 @@ def test_bamboo_transform_input_type_overspecified_for_row_data_raises_bamboo_ex
 
 
 def test_bamboo_transform_wraps_transformation_exceptions_as_bamboo_exception():
+    """Ensure that exceptions inside the transformation function are wrapped as BambooException."""
+
     @dataclass(kw_only=True)
     class InputModel(BambooObject):
         id: int
@@ -113,6 +123,8 @@ def test_bamboo_transform_wraps_transformation_exceptions_as_bamboo_exception():
 
 
 def test_bamboo_transform_supports_inherited_dataclasses():
+    """Confirm bamboo_transform works when the output type is an inherited BambooObject dataclass."""
+
     @dataclass(kw_only=True)
     class Person(BambooObject):
         id: int
@@ -135,6 +147,8 @@ def test_bamboo_transform_supports_inherited_dataclasses():
 
 
 def test_bamboo_transform_can_remove_columns_using_none_type_on_inherited_dataclass():
+    """Verify that output dataclass fields annotated as None are omitted from the result series."""
+
     @dataclass(kw_only=True)
     class Person(BambooObject):
         id: int

@@ -10,6 +10,8 @@ from bamboo._exception import BambooException
 
 
 def test_bamboo_transform_progress_apply_with_tqdm_happy_path():
+    """Verify tqdm.progress_apply works with bamboo_transform and returns the expected row output DataFrame."""
+
     tqdm.pandas()
 
     @dataclass(kw_only=True)
@@ -37,6 +39,8 @@ def test_bamboo_transform_progress_apply_with_tqdm_happy_path():
 
 
 def test_bamboo_transform_progress_apply_with_tqdm_invalid_output_raises_bamboo_exception():
+    """Ensure tqdm.progress_apply wraps transformation exceptions as BambooException for bamboo_transform functions."""
+
     tqdm.pandas()
 
     @dataclass(kw_only=True)
