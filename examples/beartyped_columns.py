@@ -15,8 +15,8 @@ from bamboo import BambooObject, bamboo_transform, validate
 @beartype
 @dataclass
 class Row(BambooObject):
-	a: np.int64
-	b: np.int64
+	a: int
+	b: int
 
 
 @beartype

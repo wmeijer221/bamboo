@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 from bamboo import BambooObject, bamboo_transform
-from bamboo._exception import BambooException
+from bamboo._exception import BambooInputException, BambooOutputException, BambooTransformationException
 
 
 def test_bamboo_transform_infers_input_and_output_types():
@@ -74,7 +74,7 @@ def test_bamboo_transform_input_type_underspecified_for_row_data_raises_bamboo_e
 
     row = pd.Series({"id": 1, "name": "alice"})
 
-    with pytest.raises(BambooException):
+    with pytest.raises(BambooInputException):
         transform(row)
 
 
@@ -97,7 +97,7 @@ def test_bamboo_transform_input_type_overspecified_for_row_data_raises_bamboo_ex
 
     row = pd.Series({"id": 1})
 
-    with pytest.raises(BambooException):
+    with pytest.raises(BambooInputException):
         transform(row)
 
 
@@ -118,7 +118,7 @@ def test_bamboo_transform_wraps_transformation_exceptions_as_bamboo_exception():
 
     row = pd.Series({"id": 1})
 
-    with pytest.raises(BambooException):
+    with pytest.raises(BambooTransformationException):
         transform(row)
 
 
@@ -169,3 +169,57 @@ def test_bamboo_transform_can_remove_columns_using_none_type_on_inherited_datacl
     assert isinstance(output, pd.Series)
     assert output.to_dict() == {"id": 4, "name": "dana"}
     assert list(output.index) == ["id", "name"]
+
+
+@pytest.mark.parametrize("violating_id", [0, 25, 49])
+def test_bamboo_transform_dataframe_row_with_none_output_type_raises_bamboo_exception(violating_id: int):
+    """Verify that a DataFrame with a single invalid first row raises BambooException."""
+
+    @dataclass(kw_only=True)
+    class Person(BambooObject):
+        id: int
+        name: str
+
+    @dataclass(kw_only=True)
+    class ReturnType(BambooObject):
+        id: str
+        name: str
+
+    @bamboo_transform
+    def transform(person: Person) -> ReturnType:
+        if person.id == violating_id:
+            # This is intentionally the wrong type.
+            return None  # type: ignore
+        return ReturnType(id=str(person.id), name=person.name)
+
+    df = pd.DataFrame({"id": list(range(50)), "name": [f"person_{i}" for i in range(50)]})
+
+    with pytest.raises(BambooOutputException):
+        df.apply(transform, axis=1)
+
+
+@pytest.mark.parametrize("violating_id", [0, 25, 49])
+def test_bamboo_transform_dataframe_row_violates_output_type_raises_bamboo_exception(violating_id: int):
+    """Verify that a DataFrame with a single invalid first row raises BambooException."""
+
+    @dataclass(kw_only=True)
+    class Person(BambooObject):
+        id: int
+        name: str
+
+    @dataclass(kw_only=True)
+    class ReturnType(BambooObject):
+        id: str
+        name: str
+
+    @bamboo_transform
+    def transform(person: Person) -> ReturnType:
+        if person.id == violating_id:
+            # This is intentionally the wrong type.
+            return Person(id=person.id, name=person.name)  # type: ignore
+        return ReturnType(id=str(person.id), name=person.name)
+
+    df = pd.DataFrame({"id": list(range(50)), "name": [f"person_{i}" for i in range(50)]})
+
+    with pytest.raises(BambooOutputException):
+        df.apply(transform, axis=1)
