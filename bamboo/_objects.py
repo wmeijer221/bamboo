@@ -16,15 +16,15 @@ class BambooObject:
         self._represented_row = represented_row
 
     def __getattribute__(self, name: str):
-        state = super().__getattribute__('__dict__')
+        state = super().__getattribute__("__dict__")
         # General defer
         if name.startswith("_") or name not in state:
             return super().__getattribute__(name)
         # Defer if not dealing with a prototype.
-        if '_represented_row' not in state:
+        if "_represented_row" not in state:
             return super().__getattribute__(name)
         # Get from represented row.
-        repr_row = state['_represented_row']
+        repr_row = state["_represented_row"]
         value = repr_row[name]
         return value
 

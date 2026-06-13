@@ -1,29 +1,30 @@
 import inspect
-from typing import Optional, Callable, Any, get_type_hints, overload, TypeVar
+from typing import Optional, Callable, Any, get_type_hints, overload, Union
 
 import pandas as pd
+
 
 from bamboo._exception import BambooException
 from bamboo._objects import BambooObject, BambooType
 from bamboo._validation import validate_input_output
 
-F = TypeVar("F", bound=Callable[..., Any])
+
+@overload
+def bamboo_transform(func: Callable[..., Any]) -> Callable[[pd.Series], pd.Series]: ...
 
 
 @overload
-def bamboo_transform(func: F) -> Callable[[pd.Series], pd.Series]: ...
-
-
-@overload
-def bamboo_transform(*, InputType: BambooType, OutputType: BambooType) -> Callable[[F], Callable[[pd.Series], pd.Series]]: ...
+def bamboo_transform(
+    *, InputType: BambooType, OutputType: BambooType
+) -> Callable[[Callable[..., Any]], Callable[[pd.Series], pd.Series]]: ...
 
 
 def bamboo_transform(
-        func: Optional[Callable[..., Any]] = None,
-        *,
-        InputType: Optional[BambooType] = None,
-        OutputType: Optional[BambooType] = None
-):
+    func: Optional[Callable[..., Any]] = None,
+    *,
+    InputType: Optional[BambooType] = None,
+    OutputType: Optional[BambooType] = None,
+) -> Union[Callable[[pd.Series], pd.Series], Callable[[Callable[..., Any]], Callable[[pd.Series], pd.Series]]]:
     """
     Decorator that wraps a `DataFrame` row-wise transformation
     to ensure that the input types and output types are as
@@ -41,7 +42,7 @@ def bamboo_transform(
         "when `func` is not specified. If you do not",
         "want to manually specify input and output",
         "types, you should use `@pd_transform` instead",
-        "of `@pd_transform()`."
+        "of `@pd_transform()`.",
     )
 
 
@@ -50,16 +51,16 @@ def _create_inferred_wrapper(func: Callable[..., Any]) -> Callable[[pd.Series], 
     param_names = list(func_signature.parameters.keys())
 
     if param_names is None:
-        raise BambooException(
-            f"Function {func.__name__} must have at least one input argument.")
+        raise BambooException(f"Function {func.__name__} must have at least one input argument.")
     first_param = param_names[0]
 
     type_hints = get_type_hints(func)
     InputType = type_hints.get(first_param)
-    OutputType = type_hints.get('return')
+    OutputType = type_hints.get("return")
 
     if (
-        InputType is None or OutputType is None
+        InputType is None
+        or OutputType is None
         or not issubclass(InputType, BambooObject)
         or not issubclass(OutputType, BambooObject)
     ):
@@ -70,18 +71,20 @@ def _create_inferred_wrapper(func: Callable[..., Any]) -> Callable[[pd.Series], 
         )
 
     def _parameterized_verify_input_output(*args, **kwargs):
-        result = validate_input_output(
-            InputType, OutputType, func, *args, **kwargs)
+        result = validate_input_output(InputType, OutputType, func, *args, **kwargs)
         return result
 
     return _parameterized_verify_input_output
 
 
-def _create_parameterized_wrapper(InputType: BambooType, OutputType: BambooType) -> Callable[[Callable[..., Any]], Callable[[pd.Series], pd.Series]]:
+def _create_parameterized_wrapper(
+    InputType: BambooType, OutputType: BambooType
+) -> Callable[[Callable[..., Any]], Callable[[pd.Series], pd.Series]]:
     def _pd_transform_wrapper(func: Callable[..., Any]) -> Callable[[pd.Series], pd.Series]:
         def _manually_parameterized_verify_input_output(*args, **kwargs) -> pd.Series:
             result = validate_input_output(InputType, OutputType, func, *args, **kwargs)
             return result
-        return _manually_parameterized_verify_input_output
-    return _pd_transform_wrapper
 
+        return _manually_parameterized_verify_input_output
+
+    return _pd_transform_wrapper
