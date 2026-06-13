@@ -1,4 +1,4 @@
-from typing import get_type_hints, TypeAlias, Type
+from typing import get_type_hints, TypeAlias, Type, Optional
 
 import pandas as pd
 
@@ -18,7 +18,7 @@ class BambooObject:
     def __init__(self):
         self._type_hints: set[str] = set(get_type_hints(type(self)).keys())
 
-    def _set_represented_row(self, represented_row: pd.Series):
+    def _set_represented_row(self, represented_row: Optional[pd.Series]):
         """Bind the current row to this Bamboo object.
 
         This is an internal helper used by Bamboo during row-wise validation and
@@ -37,7 +37,7 @@ class BambooObject:
         if name.startswith("_") or name not in state:
             return super().__getattribute__(name)
         # Defer if not dealing with a prototype.
-        if "_represented_row" not in state:
+        if "_represented_row" not in state or state['_represented_row'] is None:
             return super().__getattribute__(name)
         # Get from represented row.
         repr_row = state["_represented_row"]
