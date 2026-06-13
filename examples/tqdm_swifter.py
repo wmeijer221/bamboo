@@ -35,15 +35,11 @@ def demo_tqdm():
     tqdm.pandas()
     df = pd.DataFrame({"x": range(20)})
     print("tqdm progress_apply input:\n", df.head())
-    print("tqdm progress_apply result:\n", df.progress_apply(plus_one, axis=1).head())
+    print("tqdm progress_apply result:\n", df.progress_apply(plus_one, axis=1).head()) # type: ignore
 
 
 def demo_swifter():
-    try:
-        import swifter  # noqa: F401
-    except Exception:  # pragma: no cover - optional dependency
-        print("swifter not installed; skipping swifter demo")
-        return
+    import swifter  # noqa: F401
 
     df = pd.DataFrame({"x": range(20)})
     print("\nswifter apply input:\n", df.head())
