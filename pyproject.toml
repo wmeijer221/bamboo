@@ -37,6 +37,8 @@ keywords = ["data science", "machine learning"]
 [tool.poetry.dependencies]
 python = ">=3.12,<4.0"
 pandas = "^2.3.3"
+beartype = "^0.22.9"
+tqdm = "^4.68.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^6.2.5"
