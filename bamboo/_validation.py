@@ -17,7 +17,11 @@ def validate_input_output(InputType: BambooType, OutputType: BambooType, func, *
         raise BambooException(f"Excepted input of type `pd.Series`, received {type(input_series)}.")
 
     # Gets the prototype (from cache) and sets the represented row.
-    transformation_input = _get_prototype(InputType, input_series)
+    try:
+        transformation_input = _get_prototype(InputType, input_series)
+    except Exception as ex:
+        raise BambooException(f"Creating data object prototype of type {InputType} failed.") from ex
+
     transformation_input._set_represented_row(input_series)
 
     # Do transformation
