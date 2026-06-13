@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 import pytest
-import swifter
+import swifter  # noqa: F401
 from beartype import beartype
 
 from bamboo import BambooObject, bamboo_transform, validate
@@ -31,9 +31,7 @@ def test_bamboo_transform_swifter_force_parallel_threads_happy_path():
     result = df.swifter.force_parallel().set_dask_scheduler("threads").apply(transform, axis=1)
 
     assert isinstance(result, pd.DataFrame)
-    assert result.to_dict("records") == [
-        {"id": str(i), "full_name": "ALICE"} for i in range(n)
-    ]
+    assert result.to_dict("records") == [{"id": str(i), "full_name": "ALICE"} for i in range(n)]
 
 
 def test_bamboo_transform_swifter_force_parallel_threads_dataset_integrity_is_preserved():
@@ -61,9 +59,7 @@ def test_bamboo_transform_swifter_force_parallel_threads_dataset_integrity_is_pr
     assert result.shape == (n, 2)
     assert list(result.columns) == ["id", "full_name"]
     validate(result, PersonOutput)
-    assert result.to_dict("records") == [
-        {"id": str(i), "full_name": "ALICE"} for i in range(n)
-    ]
+    assert result.to_dict("records") == [{"id": str(i), "full_name": "ALICE"} for i in range(n)]
 
 
 def test_bamboo_transform_swifter_force_parallel_threads_invalid_output_raises_bamboo_exception():

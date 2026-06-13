@@ -37,7 +37,7 @@ class BambooObject:
         if name.startswith("_") or name not in state:
             return super().__getattribute__(name)
         # Defer if not dealing with a prototype.
-        if "_represented_row" not in state or state['_represented_row'] is None:
+        if "_represented_row" not in state or state["_represented_row"] is None:
             return super().__getattribute__(name)
         # Get from represented row.
         repr_row = state["_represented_row"]

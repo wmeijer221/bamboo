@@ -7,7 +7,6 @@ import pandas as pd
 from bamboo._exception import BambooException
 from bamboo._objects import BambooObject, BambooType
 
-
 _thread_local = threading.local()
 
 
@@ -20,7 +19,9 @@ def validate_input_output(InputType: BambooType, OutputType: BambooType, func, *
     raise BambooException(f"Expected input of type `pd.Series` or `pd.DataFrame`, received {type(input_data)}.")
 
 
-def _validate_input_output_series(InputType: BambooType, OutputType: BambooType, func, input_series: pd.Series, *args, **kwargs):
+def _validate_input_output_series(
+    InputType: BambooType, OutputType: BambooType, func, input_series: pd.Series, *args, **kwargs
+):
     # Gets the prototype (from cache) and sets the represented row.
     try:
         transformation_input = _get_prototype(InputType, input_series)
@@ -47,9 +48,12 @@ def _validate_input_output_series(InputType: BambooType, OutputType: BambooType,
     return transformation_output
 
 
-def _validate_input_output_dataframe(InputType: BambooType, OutputType: BambooType, func, input_data: pd.DataFrame, *args, **kwargs) -> pd.DataFrame:
+def _validate_input_output_dataframe(
+    InputType: BambooType, OutputType: BambooType, func, input_data: pd.DataFrame, *args, **kwargs
+) -> pd.DataFrame:
     def _parameterized_validate_input_output_series(input_series: pd.Series):
         return _validate_input_output_series(InputType, OutputType, func, input_series, *args, **kwargs)
+
     output_data = input_data.apply(_parameterized_validate_input_output_series, axis=1)
     return output_data
 

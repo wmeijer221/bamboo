@@ -25,7 +25,7 @@ def test_bamboo_transform_with_beartype_output_violation_raises_bamboo_exception
     @bamboo_transform
     def transform(person: Person) -> PersonOutput:
         # We ignore the linter error here, as the type is intentionally wrong.
-        return PersonOutput(id=person.id, full_name=person.name.upper()) # type: ignore
+        return PersonOutput(id=person.id, full_name=person.name.upper())  # type: ignore
 
     row = pd.Series({"id": 1, "name": "alice"})
 
