@@ -1,13 +1,10 @@
 from functools import lru_cache
 from typing import Any, get_type_hints
-import threading
 
 import pandas as pd
 
 from bamboo._exception import BambooException
-from bamboo._objects import BambooObject, BambooType
-
-_thread_local = threading.local()
+from bamboo._objects import BambooType
 
 
 def validate_input_output(InputType: BambooType, OutputType: BambooType, func, *args, **kwargs) -> pd.Series | pd.DataFrame:
@@ -21,14 +18,16 @@ def validate_input_output(InputType: BambooType, OutputType: BambooType, func, *
 
 def _validate_input_output_series(
     InputType: BambooType, OutputType: BambooType, func, input_series: pd.Series, *args, **kwargs
-):
+) -> pd.Series:
     # Gets the prototype (from cache) and sets the represented row.
     try:
-        transformation_input = _get_prototype(InputType, input_series)
+        input_args = {
+            str(key): value
+            for key, value in input_series.to_dict().items()
+        }
+        transformation_input = InputType(**input_args)
     except Exception as ex:
-        raise BambooException(f"Creating data object prototype of type {InputType} failed.") from ex
-
-    transformation_input._set_represented_row(input_series)
+        raise BambooException(f"Creating data object of type {InputType} with input {input_series} failed.") from ex
 
     # Do transformation
     transformation_args = (transformation_input, *args[1:])
@@ -65,17 +64,3 @@ def _get_abandoned_columns(BambooType: BambooType):
         if type_hint is type(None):
             empty_fields.add(field_name)
     return empty_fields
-
-
-def _get_prototype(BambooType: BambooType, input_series: pd.Series) -> BambooObject:
-    cache = getattr(_thread_local, "prototype_cache", None)
-    if cache is None:
-        cache = dict()
-        _thread_local.prototype_cache = cache
-
-    prototype = cache.get(BambooType)
-    if prototype is None:
-        prototype = BambooType(**input_series)
-        cache[BambooType] = prototype
-
-    return prototype
