@@ -1,3 +1,4 @@
+import os
 import sys
 import subprocess
 from pathlib import Path
@@ -9,11 +10,14 @@ def test_examples_run():
     assert examples_dir.exists(), "examples directory missing"
 
     py = sys.executable
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(project_root)
     for p in sorted(examples_dir.glob("*.py")):
         # Run each example as a subprocess from the project root so imports work
         proc = subprocess.run(
-            [py, str(p)],
+            [py, str(p.relative_to(project_root))],
             cwd=str(project_root),
+            env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             timeout=15,

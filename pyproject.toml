@@ -18,25 +18,27 @@ exclude = '''
 [tool.isort]
 skip = 'scripts'
 
-[tool.poetry]
+[project]
 name = "bamboo"
 version = "0.0.1"
 description = "`bamboo` is Python package that attempts to add more structure and validation to pandas data transformations."
-
-license = "MIT License"
-
-authors = ["Willem Meijer"]
-
-readme = "README.md" # Markdown files are supported
-
-repository = "https://github.com/wmeijer221/bamboo"
-homepage = "https://github.com/wmeijer221/bamboo"
-
+readme = "README.md"
+license = "MIT"
+authors = [
+    { name = "Willem Meijer" },
+]
 keywords = ["data science", "machine learning"]
+requires-python = ">=3.12,<4.0"
+dependencies = [
+    "pandas>=2.3.3,<3.0.0",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.12,<4.0"
-pandas = "^2.3.3"
+[project.urls]
+Homepage = "https://github.com/wmeijer221/bamboo"
+Repository = "https://github.com/wmeijer221/bamboo"
+
+[project.scripts]
+dille = "dille.cli:app"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^6.2.5"
@@ -75,5 +77,3 @@ push = true
 log_cli = true
 log_cli_level = "INFO"
 
-[tool.poetry.scripts]
-dille = "dille.cli:app"
