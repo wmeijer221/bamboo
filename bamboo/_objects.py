@@ -4,14 +4,30 @@ import pandas as pd
 
 
 class BambooObject:
+    """Base class for Bamboo row models.
+
+    Subclass :class:`BambooObject` to declare the typed fields that represent a
+    single DataFrame row for use with :func:`bamboo.bamboo_transform`.
+
+    Users typically define a dataclass subclass of :class:`BambooObject` and
+    then annotate transformation functions against that subclass. Bamboo
+    handles constructing the object from a row and converting the returned
+    object back into a ``pd.Series``.
+    """
+
     def __init__(self):
         self._type_hints: set[str] = set(get_type_hints(type(self)).keys())
 
     def _set_represented_row(self, represented_row: pd.Series):
-        """
-        Proxy method to use a single prototype object that can
-        represent all rows in a dataframe. Any access to the
-        attributes is intercepted.
+        """Bind the current row to this Bamboo object.
+
+        This is an internal helper used by Bamboo during row-wise validation and
+        transformation. It should not be called directly by user code.
+
+        Parameters
+        ----------
+        represented_row:
+            The ``pd.Series`` object representing the current DataFrame row.
         """
         self._represented_row = represented_row
 

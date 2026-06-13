@@ -25,11 +25,35 @@ def bamboo_transform(
     InputType: Optional[BambooType] = None,
     OutputType: Optional[BambooType] = None,
 ) -> Union[Callable[[pd.Series], pd.Series], Callable[[Callable[..., Any]], Callable[[pd.Series], pd.Series]]]:
-    """
-    Decorator that wraps a `DataFrame` row-wise transformation
-    to ensure that the input types and output types are as
-    expected. It allows the transformation to use `BambooObject`
-    subclass objects instead of `pd.Series` objects.
+    """Wrap a row transformation with Bamboo input/output validation.
+
+    This decorator allows a function that accepts and returns subclasses of
+    :class:`bamboo._objects.BambooObject` to be used as a row-wise function
+    for ``pandas.DataFrame.apply(..., axis=1)``. The decorator converts each
+    ``pd.Series`` row into the declared input type and converts the output
+    object back into a ``pd.Series``.
+
+    The decorator can be used in two forms:
+
+    - ``@bamboo_transform`` when the function signature already contains
+      explicit type hints for both the first argument and the return value.
+    - ``@bamboo_transform(InputType=..., OutputType=...)`` when you want to
+      specify the input and output Bamboo types explicitly.
+
+    Parameters
+    ----------
+    func:
+        The function being decorated. If ``None``, returns a decorator factory
+        accepting ``InputType`` and ``OutputType``.
+    InputType:
+        A Bamboo subclass type to construct from each input ``pd.Series``.
+    OutputType:
+        A Bamboo subclass type expected from the decorated function.
+
+    Returns
+    -------
+    callable:
+        Either the wrapped row transformer or a decorator factory.
     """
 
     if func is not None:
