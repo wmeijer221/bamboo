@@ -1,0 +1,75 @@
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+line-length = 128
+target-version = ['py310', 'py311', 'py312']
+include = '\/(bamboo|tests|scripts)\/.*\.py$'
+exclude = '''
+/(
+    \.git
+    | \.venv
+    | _build
+)/
+'''
+
+[tool.isort]
+skip = 'scripts'
+
+[tool.poetry]
+name = "bamboo"
+version = "0.0.1"
+description = "`bamboo` is Python package that attempts to add more structure and validation to pandas data transformations."
+
+license = "MIT License"
+
+authors = ["Willem Meijer"]
+
+readme = "README.md" # Markdown files are supported
+
+repository = "https://github.com/wmeijer221/bamboo"
+homepage = "https://github.com/wmeijer221/bamboo"
+
+keywords = ["data science", "machine learning"]
+
+[tool.poetry.dependencies]
+python = ">=3.12,<4.0"
+pandas = "^2.3.3"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^6.2.5"
+pytest-cov = "^2.4"
+bumpver = "^2024.1130"
+
+# [tool.poetry.scripts]
+pytest-profiling = "^1.8.1"
+black = "^26.3.1"
+flake8 = "^7.3.0"
+
+[tool.bumpver]
+current_version = "0.0.1"
+version_pattern = "MAJOR.MINOR.PATCH"
+commit_message = "bump version {old_version} -> {new_version}"
+tag_message = "{new_version}"
+tag_scope = "default"
+pre_commit_hook = ""
+post_commit_hook = ""
+commit = true
+tag = true
+push = true
+
+[tool.bumpver.file_patterns]
+"pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
+"bamboo/__init__.py" = ['__version__ = "{version}"']
+"Makefile" = ['pip install ./dist/dille-{version}.tar.gz']
+".github/workflows/ci.yml" = ['pip install ./dist/dille-{version}.tar.gz']
+
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"
+
+[tool.poetry.scripts]
+dille = "dille.cli:app"
