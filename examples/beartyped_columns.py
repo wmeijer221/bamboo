@@ -9,8 +9,7 @@ import numpy as np
 
 from beartype import beartype
 
-from bamboo._decorator import bamboo_transform
-from bamboo._objects import BambooObject
+from bamboo import BambooObject, bamboo_transform, validate
 
 
 @beartype
@@ -33,6 +32,7 @@ def add_and_mul(row: Row) -> Out:
 
 def demo():
 	df = pd.DataFrame({"a": [1, 2, 3], "b": [10, 20, 30]})
+	validate(df, Row)
 	print("input:\n", df)
 	print("transformed:\n", df.apply(add_and_mul, axis=1))
 

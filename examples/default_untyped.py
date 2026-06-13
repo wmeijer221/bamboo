@@ -6,8 +6,7 @@ When you don't want to use type hints on the function, pass `InputType` and
 from dataclasses import dataclass
 import pandas as pd
 
-from bamboo._decorator import bamboo_transform
-from bamboo._objects import BambooObject
+from bamboo import BambooObject, bamboo_transform, validate
 
 
 @dataclass
@@ -29,6 +28,7 @@ def inc_and_double_untyped(row):
 
 def demo():
     df = pd.DataFrame({"a": [4, 5, 6], "b": [40, 50, 60]})
+    validate(df, InRow)
     print("input:\n", df)
     print("transformed:\n", df.apply(inc_and_double_untyped, axis=1))
 

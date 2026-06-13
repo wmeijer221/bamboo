@@ -6,8 +6,7 @@ so `@bamboo_transform` can infer input/output types.
 from dataclasses import dataclass
 import pandas as pd
 
-from bamboo._decorator import bamboo_transform
-from bamboo._objects import BambooObject
+from bamboo import BambooObject, bamboo_transform, validate
 
 
 @dataclass
@@ -29,6 +28,7 @@ def inc_and_double(row: InputRow) -> OutputRow:
 
 def demo():
     df = pd.DataFrame({"a": [1, 2, 3], "b": [10, 20, 30]})
+    validate(df, InputRow)
     print("input:\n", df)
     print("transformed:\n", df.apply(inc_and_double, axis=1))
 

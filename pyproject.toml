@@ -66,8 +66,9 @@ push = true
 [tool.bumpver.file_patterns]
 "pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
 "bamboo/__init__.py" = ['__version__ = "{version}"']
-"Makefile" = ['pip install ./dist/dille-{version}.tar.gz']
-".github/workflows/ci.yml" = ['pip install ./dist/dille-{version}.tar.gz']
+"README.md" = ['Current version: "{version}"']
+"Makefile" = ['pip install ./dist/bamboo-{version}.tar.gz']
+".github/workflows/ci.yml" = ['pip install ./dist/bamboo-{version}.tar.gz']
 
 
 [tool.pytest.ini_options]

@@ -6,42 +6,39 @@ This script demonstrates using `tqdm`'s `progress_apply` and `swifter`'s
 from dataclasses import dataclass
 import pandas as pd
 
-from bamboo._decorator import bamboo_transform
-from bamboo._objects import BambooObject
+from bamboo import BambooObject, bamboo_transform, validate
 
 
 @dataclass
-class R(BambooObject):
+class Row(BambooObject):
     x: int
 
 
 @dataclass
-class Out(R):
+class Out(Row):
     pass
 
 
 @bamboo_transform
-def plus_one(r: R) -> Out:
+def plus_one(r: Row) -> Out:
     return Out(x=r.x + 1)
 
 
 def demo_tqdm():
-    try:
-        from tqdm import tqdm
-    except Exception:  # pragma: no cover - optional dependency
-        print("tqdm not installed; skipping tqdm demo")
-        return
+    from tqdm import tqdm
 
     tqdm.pandas()
     df = pd.DataFrame({"x": range(20)})
+    validate(df, Row)
     print("tqdm progress_apply input:\n", df.head())
-    print("tqdm progress_apply result:\n", df.progress_apply(plus_one, axis=1).head()) # type: ignore
+    print("tqdm progress_apply result:\n", df.progress_apply(plus_one, axis=1).head())  # type: ignore
 
 
 def demo_swifter():
     import swifter  # noqa: F401
 
     df = pd.DataFrame({"x": range(20)})
+    validate(df, Row)
     print("\nswifter apply input:\n", df.head())
     print("swifter apply result:\n", df.swifter.apply(plus_one, axis=1).head())
 
