@@ -6,7 +6,7 @@ import swifter  # noqa: F401
 from beartype import beartype
 
 from bamboo import BambooObject, bamboo_transform, validate
-from bamboo._exception import BambooException
+from bamboo._exception import BambooTransformationException
 
 
 def test_bamboo_transform_swifter_force_parallel_threads_happy_path():
@@ -83,5 +83,5 @@ def test_bamboo_transform_swifter_force_parallel_threads_invalid_output_raises_b
     n = 100
     df = pd.DataFrame({"id": list(range(n)), "name": ["alice"] * n})
 
-    with pytest.raises(BambooException):
+    with pytest.raises(BambooTransformationException):
         df.swifter.force_parallel().set_dask_scheduler("threads").apply(transform, axis=1)

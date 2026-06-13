@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 from bamboo import BambooObject, validate
-from bamboo._exception import BambooException
+from bamboo._exception import BambooInputException
 
 
 def test_validate_happy_path():
@@ -33,7 +33,7 @@ def test_validate_underspecified():
     # Missing column 'c'
     df = pd.DataFrame({"a": [1, 2], "b": ["x", "y"]})
 
-    with pytest.raises(BambooException):
+    with pytest.raises(BambooInputException):
         validate(df, Row)
 
 
@@ -48,5 +48,5 @@ def test_validate_overspecified():
     # Extra column 'd' not in Row
     df = pd.DataFrame({"a": [1, 2], "b": ["x", "y"], "d": [1.0, 2.0]})
 
-    with pytest.raises(BambooException):
+    with pytest.raises(BambooInputException):
         validate(df, Row)

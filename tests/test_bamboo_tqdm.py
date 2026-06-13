@@ -6,7 +6,7 @@ from beartype import beartype
 from tqdm import tqdm
 
 from bamboo import BambooObject, bamboo_transform
-from bamboo._exception import BambooException
+from bamboo._exception import BambooTransformationException
 
 
 def test_bamboo_transform_progress_apply_with_tqdm_happy_path():
@@ -60,5 +60,5 @@ def test_bamboo_transform_progress_apply_with_tqdm_invalid_output_raises_bamboo_
 
     df = pd.DataFrame({"id": [1], "name": ["alice"]})
 
-    with pytest.raises(BambooException):
+    with pytest.raises(BambooTransformationException):
         df.progress_apply(transform, axis=1)
