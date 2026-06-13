@@ -2,7 +2,7 @@ build_run: build run
 
 build:
 	poetry build
-	pip install ./dist/bamboo-0.0.1.tar.gz
+	pip install ./dist/bamboo_pandas-0.0.2.tar.gz
 
 lint:
 	# Runs black checker
@@ -16,3 +16,8 @@ profile:
 
 test:
 	poetry run pytest .
+
+publish: build
+	poetry run twine check dist/*
+	@read -p "PyPI password: " PASSWORD; \
+     poetry publish --username __token__ --password "$$PASSWORD"

@@ -1,6 +1,6 @@
 # Bamboo
 
-Current version: "0.0.1"
+Current version: "0.0.2"
 
 Bamboo is a small library that adds structure and validation to pandas
 DataFrame row-transformations. It provides a lightweight way to declare the

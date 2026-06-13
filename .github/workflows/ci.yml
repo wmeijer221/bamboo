@@ -31,4 +31,4 @@ jobs:
     - name: Build package
       run: |
         poetry build
-        pip install ./dist/bamboo-0.0.1.tar.gz
+        pip install ./dist/bamboo_pandas-0.0.2.tar.gz

@@ -20,7 +20,7 @@ skip = 'scripts'
 
 [project]
 name = "bamboo-pandas"
-version = "0.0.1"
+version = "0.0.2"
 description = "`bamboo` is Python package that attempts to add more structure and validation to pandas data transformations."
 readme = "README.md"
 license = "MIT"
@@ -59,7 +59,7 @@ tqdm = "^4.68.2"
 swifter = "^1.4.0"
 
 [tool.bumpver]
-current_version = "0.0.1"
+current_version = "0.0.2"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message = "bump version {old_version} -> {new_version}"
 tag_message = "{new_version}"
@@ -74,8 +74,8 @@ push = true
 "pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
 "bamboo/__init__.py" = ['__version__ = "{version}"']
 "README.md" = ['Current version: "{version}"']
-"Makefile" = ['pip install ./dist/bamboo-{version}.tar.gz']
-".github/workflows/ci.yml" = ['pip install ./dist/bamboo-{version}.tar.gz']
+"Makefile" = ['pip install ./dist/bamboo_pandas-{version}.tar.gz']
+".github/workflows/ci.yml" = ['pip install ./dist/bamboo_pandas-{version}.tar.gz']
 
 
 [tool.pytest.ini_options]
