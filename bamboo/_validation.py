@@ -1,12 +1,14 @@
 from functools import lru_cache
 from typing import Any, get_type_hints
+import threading
 
 import pandas as pd
 
 from bamboo._exception import BambooException
 from bamboo._objects import BambooObject, BambooType
 
-_prototype_cache = dict()
+
+_thread_local = threading.local()
 
 
 def validate_input_output(InputType: BambooType, OutputType: BambooType, func, *args, **kwargs) -> pd.Series:
@@ -52,9 +54,14 @@ def _get_abandoned_columns(BambooType: BambooType):
 
 
 def _get_prototype(BambooType: BambooType, input_series: pd.Series) -> BambooObject:
-    if BambooType in _prototype_cache:
-        prototype = _prototype_cache[BambooType]
-    else:
+    cache = getattr(_thread_local, "prototype_cache", None)
+    if cache is None:
+        cache = dict()
+        _thread_local.prototype_cache = cache
+
+    prototype = cache.get(BambooType)
+    if prototype is None:
         prototype = BambooType(**input_series)
-        _prototype_cache[BambooType] = prototype
+        cache[BambooType] = prototype
+
     return prototype

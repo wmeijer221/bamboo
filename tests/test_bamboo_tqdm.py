@@ -52,7 +52,7 @@ def test_bamboo_transform_progress_apply_with_tqdm_invalid_output_raises_bamboo_
 
     @bamboo_transform
     def transform(person: Person) -> PersonOutput:
-        return PersonOutput(id=person.id, full_name=person.name.upper())
+        raise ValueError("boom")
 
     df = pd.DataFrame({"id": [1], "name": ["alice"]})
 
